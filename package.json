@@ -1,0 +1,27 @@
+{
+  "name": "kovra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "vite build",
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "test": "node --test",
+    "import:sqlite": "node --env-file-if-exists=.env server/import-sqlite.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "5.3.0",
+    "@fontsource/instrument-serif": "5.3.0",
+    "express": "^5.2.1",
+    "mongodb": "6.22.0",
+    "qrcode-generator": "2.0.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.6"
+  }
+}

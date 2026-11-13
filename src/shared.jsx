@@ -64,7 +64,7 @@ export function Header({ venue, children }) {
   return <header className="site-head">
     <div className="wrap head-inner">
       <a className="brand" href="/" aria-label={venue + ', volver a la carta'}>
-        <img className="brand-mark" src="/kovra-mark.png" width="30" height="30" alt="" /><span>{venue}</span>
+        {venue === 'KOVRA' ? <img className="brand-mark" src="/kovra-mark.png" width="200" height="36" alt="" /> : <span>{venue}</span>}
       </a>
       <nav aria-label="Navegación">{children}</nav>
     </div>

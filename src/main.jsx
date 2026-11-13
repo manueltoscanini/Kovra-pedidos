@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import '@fontsource/instrument-serif/latin-400.css';
 import '@fontsource-variable/dm-sans/wght.css';
 import './style.css';
 import Shop from './shop.jsx';

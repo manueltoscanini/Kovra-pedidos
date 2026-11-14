@@ -1,0 +1,57 @@
+.brand-order-progress {
+  margin-top: clamp(20px, 3vw, 36px);
+  padding: clamp(14px, 3vw, 30px);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.brand-order-progress ol { margin: 0; padding: 0; list-style: none; counter-reset: order-step; }
+.brand-order-progress li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding-inline: 14px;
+  border-bottom: 1px solid var(--edge);
+  counter-increment: order-step;
+  animation: brand-order-step 9s ease-in-out infinite;
+}
+.brand-order-progress li::before {
+  content: counter(order-step, decimal-leading-zero);
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-variant-numeric: tabular-nums;
+  font-size: .75rem;
+}
+.brand-order-progress li:nth-child(2) { animation-delay: 3s; }
+.brand-order-progress li:nth-child(3) { animation-delay: 6s; }
+.brand-order-progress li:last-child { border-bottom: 0; }
+
+@keyframes brand-order-step {
+  0%, 33.33%, 100% { background: transparent; color: var(--ink); }
+  7%, 26% { background: #271249; color: var(--accent); }
+}
+
+.brand-mission { background: var(--bg); color: var(--ink); }
+.brand-mission h2 { padding-block: clamp(28px, 4vw, 54px); }
+.brand-mission-media {
+  display: block;
+  width: 100%;
+  height: clamp(230px, 56vw, 680px);
+  object-fit: cover;
+  object-position: center;
+}
+.brand-mission img { object-position: center 58%; }
+.brand-mission :focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+
+@media (max-width: 520px) {
+  .brand-mission img { object-position: 82% 58%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-order-progress li { animation: none; }
+}

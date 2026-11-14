@@ -144,6 +144,7 @@ export default function Shop({ menu, setMenu }) {
       </section>
       <footer className="site-footer">
         <span>Prohibida la venta a menores de 18 años de edad.</span>
+        <a href="/marca">Conocé KOVRA</a>
         <a href="/barra">Panel de barra</a>
       </footer>
     </main>

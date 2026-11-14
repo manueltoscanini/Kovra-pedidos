@@ -6,6 +6,7 @@ import Shop from './shop.jsx';
 import Track from './track.jsx';
 import Bar from './bar.jsx';
 import Owner from './owner.jsx';
+import BrandPage from './brand.jsx';
 import { api } from './shared.jsx';
 
 function App() {
@@ -22,4 +23,6 @@ function App() {
   return <Shop menu={menu} setMenu={setMenu} />;
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+createRoot(document.getElementById('root')).render(
+  /^\/marca(?:\/|$)/.test(window.location.pathname) ? <BrandPage /> : <App />,
+);

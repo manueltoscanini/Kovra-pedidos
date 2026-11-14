@@ -43,6 +43,10 @@ npm start
 
 [Guía de Express en Railway](https://railway.com/guides/express) · [Volúmenes de Railway](https://docs.railway.com/volumes)
 
+## Contacto en la página de marca
+
+Configurá `VITE_BRAND_CONTACT_URL` con un enlace público de WhatsApp o agenda (HTTPS), o con un correo en formato `mailto:`. Volvé a compilar con `npm run build`, o redesplegá en Railway después de agregar la variable. Mientras esté vacía, el botón de la portada lleva a «Ver cómo funciona», donde están el WhatsApp y el correo de KOVRA.
+
 ## MongoDB Atlas
 
 SQLite se usa cuando `MONGODB_URI` está vacía. Para probar con Atlas, configurá `MONGODB_URI` y `MONGODB_DB` en el servidor, habilitá su acceso de red en Atlas y reiniciá. Express selecciona MongoDB con esas variables. Una base nueva arranca con el catálogo de ejemplo.

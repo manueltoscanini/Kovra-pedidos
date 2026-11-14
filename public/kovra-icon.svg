@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 87 87" width="87" height="87" fill="none">
+  <defs>
+    <linearGradient id="bg-base" x1="8" y1="6" x2="79" y2="81" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#964dff" />
+      <stop offset="48%" stop-color="#340f80" />
+      <stop offset="100%" stop-color="#6115e7" />
+    </linearGradient>
+    <radialGradient id="bg-tl" cx="16" cy="14" r="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a866ff" stop-opacity="0.72" />
+      <stop offset="100%" stop-color="#a866ff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="bg-tr" cx="76" cy="14" r="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1d084d" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#1d084d" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="edge-stroke" x1="8" y1="4" x2="78" y2="83" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c99eff" stop-opacity="0.65" />
+      <stop offset="50%" stop-color="#6e2be0" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#9b51ff" stop-opacity="0.55" />
+    </linearGradient>
+    <linearGradient id="v-fill" x1="65" y1="22" x2="36" y2="63" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="38%" stop-color="#e3c8ff" />
+      <stop offset="72%" stop-color="#be82ff" />
+      <stop offset="100%" stop-color="#9747f5" />
+    </linearGradient>
+    <filter id="v-shadow" x="10" y="16" width="68" height="56" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#140438" flood-opacity="0.45" />
+    </filter>
+  </defs>
+
+  <rect x="1" y="1" width="85" height="85" rx="19" fill="url(#bg-base)" />
+  <rect x="1" y="1" width="85" height="85" rx="19" fill="url(#bg-tl)" />
+  <rect x="1" y="1" width="85" height="85" rx="19" fill="url(#bg-tr)" />
+  <rect x="1.5" y="1.5" width="84" height="84" rx="18.5" stroke="url(#edge-stroke)" stroke-width="1" />
+
+  <path
+    filter="url(#v-shadow)"
+    fill="url(#v-fill)"
+    d="M19.2 24.5 H26.2 C27.8 24.5 29.1 25.4 29.8 26.9 L41.2 50.8 C41.6 51.6 42.4 51.6 42.8 50.8 L57.4 24.2 C58.5 22.2 60.4 21.2 62.7 21.2 H67.4 C69.7 21.2 71.1 23.6 69.9 25.6 L49.4 59.4 C47.7 62.3 45.0 63.8 41.8 63.8 C38.5 63.8 35.8 62.2 34.3 59.2 L17.3 27.5 C16.4 25.9 17.5 24.5 19.2 24.5 Z"
+  />
+</svg>

@@ -60,11 +60,11 @@ export function ErrorText({ children }) {
   return children ? <p className="error" role="alert">{children}</p> : null;
 }
 
-export function Header({ venue, children }) {
+export function Header({ venue, children, home = '/' }) {
   return <header className="site-head">
     <div className="wrap head-inner">
-      <a className="brand" href="/" aria-label={venue + ', volver a la carta'}>
-        {venue === 'KOVRA' ? <img className="brand-mark" src="/kovra-mark.png" width="200" height="36" alt="" /> : <span>{venue}</span>}
+      <a className="brand" href={home} aria-label={home === '/' ? venue + ', volver a la carta' : venue}>
+        {venue === 'KOVRA' ? <img className="brand-mark" src="/kovra-mark.svg" width="499" height="90" alt="" /> : <span>{venue}</span>}
       </a>
       <nav aria-label="Navegación">{children}</nav>
     </div>

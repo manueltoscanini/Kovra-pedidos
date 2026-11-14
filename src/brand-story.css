@@ -3,6 +3,23 @@
   padding: clamp(14px, 3vw, 30px);
   background: var(--bg);
   color: var(--ink);
+  border: 1px solid var(--edge);
+}
+
+.brand-order-bar {
+  height: 3px;
+  margin-bottom: 12px;
+  background: #24163d;
+  overflow: hidden;
+}
+
+.brand-order-bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .brand-order-progress ol { margin: 0; padding: 0; list-style: none; counter-reset: order-step; }
@@ -14,11 +31,13 @@
   padding-inline: 14px;
   border-bottom: 1px solid var(--edge);
   counter-increment: order-step;
-  animation: brand-order-step 9s ease-in-out infinite;
+  cursor: pointer;
+  transition: background-color 280ms ease, color 280ms ease;
 }
 .brand-order-progress li::before {
   content: counter(order-step, decimal-leading-zero);
   display: grid;
+  flex: 0 0 auto;
   width: 30px;
   height: 30px;
   place-items: center;
@@ -26,14 +45,32 @@
   border-radius: 50%;
   font-variant-numeric: tabular-nums;
   font-size: .75rem;
+  transition: background-color 280ms ease, color 280ms ease, border-color 280ms ease;
 }
-.brand-order-progress li:nth-child(2) { animation-delay: 3s; }
-.brand-order-progress li:nth-child(3) { animation-delay: 6s; }
 .brand-order-progress li:last-child { border-bottom: 0; }
-
-@keyframes brand-order-step {
-  0%, 33.33%, 100% { background: transparent; color: var(--ink); }
-  7%, 26% { background: #271249; color: var(--accent); }
+.brand-order-progress li[data-active="true"] {
+  background: #2b1452;
+  color: var(--accent);
+}
+.brand-order-progress li[data-active="true"]::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+}
+.brand-order-progress li[data-done="true"]::before {
+  border-color: var(--lavender);
+  color: var(--lavender);
+}
+.brand-order-label { font-weight: 600; }
+.brand-order-meta {
+  margin-inline-start: auto;
+  font-size: .82rem;
+  color: var(--muted);
+  transition: color 280ms ease;
+}
+.brand-order-progress li[data-active="true"] .brand-order-meta {
+  color: var(--ink);
 }
 
 .brand-mission { background: var(--bg); color: var(--ink); }
@@ -50,8 +87,4 @@
 
 @media (max-width: 520px) {
   .brand-mission img { object-position: 82% 58%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .brand-order-progress li { animation: none; }
 }

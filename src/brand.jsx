@@ -22,6 +22,9 @@ function IndustryHero({ industry, landing = false }) {
   useEffect(() => {
     const element = player.current;
     if (!element) return;
+    element.defaultMuted = true;
+    element.muted = true;
+    element.playsInline = true;
     element.play().catch(() => {});
   }, [video]);
 
@@ -152,64 +155,130 @@ function IndustryPage({ industry }) {
   </>;
 }
 
+const ORDER_STEPS = [
+  { label: 'Pedido recibido', detail: 'Entra desde el QR' },
+  { label: 'En preparación', detail: 'El equipo lo toma' },
+  { label: 'Listo', detail: 'Aviso para entregar' },
+];
+
 function OrderProgress() {
-  return <div className="brand-order-progress">
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActive(current => (current + 1) % ORDER_STEPS.length);
+    }, 2200);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return <div className="brand-order-progress" data-step={active}>
+    <div className="brand-order-bar" aria-hidden="true">
+      <span style={{ transform: `scaleX(${(active + 1) / ORDER_STEPS.length})` }} />
+    </div>
     <ol aria-label="Estados de un pedido">
-      <li>Pedido recibido</li>
-      <li>En preparación</li>
-      <li>Listo</li>
+      {ORDER_STEPS.map((step, index) => (
+        <li key={step.label}
+          data-active={active === index ? 'true' : 'false'}
+          data-done={index < active ? 'true' : 'false'}
+          onClick={() => setActive(index)}>
+          <span className="brand-order-label">{step.label}</span>
+          <span className="brand-order-meta">{step.detail}</span>
+        </li>
+      ))}
     </ol>
   </div>;
 }
 
-function MissionMedia({ src, poster }) {
-  const player = useRef(null);
+const SPRITE_COLS = 5;
+const SPRITE_ROWS = 8;
+const SPRITE_FRAMES = SPRITE_COLS * SPRITE_ROWS;
+const FRAME_W = 768;
+const FRAME_H = 432;
+
+function MissionMedia({ sprite, poster }) {
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const element = player.current;
-    if (!element) return;
-    let frame = 0;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    function updateTime() {
-      frame = 0;
-      const duration = element.duration;
-      if (!Number.isFinite(duration) || duration <= 0) return;
-      const rect = element.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight || 1;
+    let frameReq = 0;
+    let lastIndex = -1;
+    let spriteReady = false;
+
+    const posterImg = new Image();
+    const spriteImg = new Image();
+
+    function getProgress() {
+      const rect = canvas.getBoundingClientRect();
+      const vh = window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 1;
       const center = rect.top + rect.height / 2;
-      const start = vh * 0.88;
-      const end = vh * 0.15;
-      const progress = Math.min(1, Math.max(0, (start - center) / (start - end)));
-      const target = Math.min(duration - 0.04, Math.max(0, progress * duration));
-      if (Math.abs(element.currentTime - target) > 0.015) {
-        element.currentTime = target;
+      const start = vh * 0.9;
+      const end = vh * 0.12;
+      return Math.min(1, Math.max(0, (start - center) / (start - end)));
+    }
+
+    function renderFrame(force = false) {
+      frameReq = 0;
+      if (!spriteReady) {
+        if (posterImg.complete && posterImg.naturalWidth > 0) {
+          ctx.drawImage(posterImg, 0, 0, FRAME_W, FRAME_H);
+        }
+        return;
       }
+      const progress = getProgress();
+      const index = Math.min(SPRITE_FRAMES - 1, Math.max(0, Math.round(progress * (SPRITE_FRAMES - 1))));
+      if (!force && index === lastIndex) return;
+      lastIndex = index;
+      const col = index % SPRITE_COLS;
+      const row = Math.floor(index / SPRITE_COLS);
+      ctx.drawImage(
+        spriteImg,
+        col * FRAME_W,
+        row * FRAME_H,
+        FRAME_W,
+        FRAME_H,
+        0,
+        0,
+        FRAME_W,
+        FRAME_H,
+      );
     }
 
     function onScroll() {
-      if (!frame) frame = window.requestAnimationFrame(updateTime);
+      if (!frameReq) frameReq = window.requestAnimationFrame(() => renderFrame(false));
     }
 
-    function onLoaded() {
-      element.pause();
-      updateTime();
-    }
+    posterImg.onload = () => {
+      if (!spriteReady) renderFrame(true);
+    };
+    spriteImg.onload = () => {
+      spriteReady = true;
+      renderFrame(true);
+    };
 
-    element.addEventListener('loadedmetadata', onLoaded);
+    if (poster) posterImg.src = poster;
+    if (sprite) spriteImg.src = sprite;
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
-    if (element.readyState >= 1) onLoaded();
+    window.visualViewport?.addEventListener('scroll', onScroll, { passive: true });
+    window.visualViewport?.addEventListener('resize', onScroll);
+    renderFrame(true);
 
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      element.removeEventListener('loadedmetadata', onLoaded);
+      if (frameReq) window.cancelAnimationFrame(frameReq);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
+      window.visualViewport?.removeEventListener('scroll', onScroll);
+      window.visualViewport?.removeEventListener('resize', onScroll);
     };
-  }, [src]);
+  }, [sprite, poster]);
 
-  return <video ref={player} className="brand-mission-media" src={src} poster={poster}
-    muted playsInline preload="auto"
+  return <canvas ref={canvasRef} className="brand-mission-media"
+    width={FRAME_W} height={FRAME_H} role="img"
     aria-label="Un pedido pasa de las manos de quien lo prepara a quien lo entrega" />;
 }
 
@@ -226,7 +295,8 @@ export default function BrandPage() {
   </>;
 
   const overviewVideo = videos['./brand-media/que-hacemos.mp4'];
-  const missionVideo = videos['./brand-media/nuestra-mision.mp4'];
+  const missionSprite = posters['./brand-media/nuestra-mision-frames.webp'];
+  const missionPoster = posters['./brand-media/nuestra-mision.webp'];
   const contact = import.meta.env.VITE_BRAND_CONTACT_URL?.trim();
   const hasContact = /^(https:\/\/|mailto:).+/i.test(contact ?? '');
   return <>
@@ -253,9 +323,9 @@ export default function BrandPage() {
       </section>
       <section className="brand-mission" aria-labelledby="mission-title">
         <h2 className="wrap" id="mission-title">Nuestra misión</h2>
-        {missionVideo
-          ? <MissionMedia src={missionVideo} poster={posters['./brand-media/nuestra-mision.webp']} />
-          : <img className="brand-mission-media" src="/marca-imagenes/restaurantes-y-cafeterias.webp" width="512" height="512" loading="lazy" alt="Un mozo lleva un plato a la mesa" />}
+        {missionSprite
+          ? <MissionMedia sprite={missionSprite} poster={missionPoster} />
+          : <img className="brand-mission-media" src={missionPoster ?? '/marca-imagenes/restaurantes-y-cafeterias.webp'} width="512" height="512" loading="lazy" alt="Un mozo lleva un plato a la mesa" />}
       </section>
       <section id="equipo" className="wrap brand-section" aria-labelledby="team-title">
         <h2 id="team-title">Quiénes somos</h2>
